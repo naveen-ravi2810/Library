@@ -1,0 +1,23 @@
+Project: Hi. Build a book library API for cataloging your books. Also you can notes to each book and rate them
+Stack: python, fastapi, postresql, alembic, sqlmodel, redis (for caching), pydantic-settings.
+
+
+1.analyze the project
+2.API's
+    -book
+        -Create a book
+        -Read a book/books
+        -Delete a book
+        -Update a book
+    -Notes
+        -Create a Note/Notes
+        -Read a Note/Notes
+        -Update a Note/Notes
+        -Delete a Note/Notes
+    -Rating
+        - RatePositive (1 upvote)
+        - RateNegative (1 downvote)
+3.Models
+    -Book
+    -Notes
+

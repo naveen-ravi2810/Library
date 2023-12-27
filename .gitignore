@@ -1,0 +1,10 @@
+venv
+
+.env
+
+.idea
+
+/*/__pycache__
+*/__pycache__
+API/Endpoints/__pycache__
+API/Endpoints/v1/__pycache__
