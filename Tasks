@@ -20,4 +20,4 @@ Stack: python, fastapi, postresql, alembic, sqlmodel, redis (for caching), pydan
 3.Models
     -Book
     -Notes
-
+    -rating

@@ -1,29 +1,54 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
-from .db_Config import Base, engine
-from datetime import datetime
+from sqlalchemy import Column, Integer, String, ForeignKey, Date
+from sqlalchemy.ext.declarative import declarative_base
+from datetime import date
+
+Base = declarative_base()
+metadata = Base.metadata
 
 
-class Books(Base):
+class TimeBase(Base):
+    __abstract__ = True
+    created_at = date.today()
+    updated_on = Column(Date, default=None, onupdate=date.today())
+
+
+class BooksBase(TimeBase):
     __tablename__ = "books"
     book_id = Column(Integer, primary_key=True, autoincrement=True)
-    book_name = Column(String(60), unique=True)
-    book_description = Column(String(200))
-    book_add_date = datetime.utcnow()
-    extend_existing = True
-
-class Authors(Base):
-    __tablename__ = "authors"
-    author_id = Column(Integer, primary_key=True, autoincrement=True)
-    author_name = Column(String(80), unique=True)
-    extend_existing = True
+    book_name = Column(String(60), unique=True, nullable=False)
+    book_description = Column(String(600), nullable=False)
+    book_genre = Column(String(60), nullable=False)
+    book_author = Column(String(100), nullable=False)
+    book_date = Column(Date, nullable=False)
 
 
-class Author_Book(Base):
-    __tablename__ = "books_authors"
-    coimbination_col = Column(Integer, primary_key=True, autoincrement=True)
-    author_id = Column(Integer, ForeignKey('authors.author_id'))
-    book_id = Column(Integer, ForeignKey('books.book_id'))
-    extend_existing = True
+class NotesBase(TimeBase):
+    __tablename__ = "notes"
+    notes_id = Column(Integer, primary_key=True, autoincrement=True)
+    note = Column(String(1000), nullable=False)
+    book_id = Column(
+        Integer, ForeignKey("books.book_id", ondelete="CASCADE"), nullable=False
+    )
+    user_id = Column(
+        Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False
+    )
 
 
-Base.metadata.create_all(engine)
+class UsersBase(TimeBase):
+    __tablename__ = "users"
+    user_id = Column(Integer, primary_key=True, autoincrement=True)
+    user_name = Column(String(100), unique=True, index=True)
+    user_nick_name = Column(String(100), default=None)
+    user_role = Column(String(20), default="reader")
+
+
+class RatingBase(TimeBase):
+    __tablename__ = "ratings"
+    rating_id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(
+        Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False
+    )
+    book_id = Column(
+        Integer, ForeignKey("books.book_id", ondelete="CASCADE"), nullable=False
+    )
+    rating = Column(Integer, nullable=False)
