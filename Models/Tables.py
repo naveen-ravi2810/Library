@@ -40,6 +40,7 @@ class UsersBase(TimeBase):
     user_name = Column(String(100), unique=True, index=True)
     user_nick_name = Column(String(100), default=None)
     user_role = Column(String(20), default="reader")
+    password = Column(String, nullable=False)
 
 
 class RatingBase(TimeBase):

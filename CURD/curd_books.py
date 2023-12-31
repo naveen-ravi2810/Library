@@ -57,9 +57,6 @@ def get_books_by_filter(db: Session, book_name: str, book_author: str, book_genr
     :param book_genre:
     :return:
     """
-    print(book_author)
-    print(book_genre)
-    print(book_name)
     return (
         db.query(BooksBase)
         .filter(
@@ -73,6 +70,27 @@ def get_books_by_filter(db: Session, book_name: str, book_author: str, book_genr
     )
 
 
+def update_book_by_id(db: Session, book_id: int, book_details: Validators.CreateBook):
+    """
+    Update the existing book details by id
+    :param db:
+    :param book_id:
+    :param book_details:
+    :return:
+    """
+    db.query(BooksBase).filter_by(book_id=book_id).update(
+        {
+            BooksBase.book_name: book_details.book_name,
+            BooksBase.book_genre: book_details.book_genre,
+            BooksBase.book_author: book_details.book_author,
+            BooksBase.book_description: book_details.book_description,
+            BooksBase.book_date: book_details.book_date,
+        }
+    )
+    db.commit()
+    return True
+
+
 def delete_book_by_id(db: Session, book_id: int):
     """
     To remove the book from the database by book_id
@@ -80,7 +98,9 @@ def delete_book_by_id(db: Session, book_id: int):
     :param book_id:
     :return:
     """
-    book_to_be_deleted = db.query(BooksBase).filter(BooksBase.book_id == book_id).first()
+    book_to_be_deleted = (
+        db.query(BooksBase).filter(BooksBase.book_id == book_id).first()
+    )
     if book_to_be_deleted:
         db.query(BooksBase).filter(BooksBase.book_id == book_id).delete()
         db.commit()

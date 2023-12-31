@@ -1,6 +1,7 @@
 alembic==1.13.1
 annotated-types==0.6.0
 anyio==3.7.1
+bcrypt==4.1.2
 black==23.12.1
 cffi==1.16.0
 click==8.1.7

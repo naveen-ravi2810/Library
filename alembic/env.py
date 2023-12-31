@@ -31,7 +31,7 @@ db_uri = (
     + "@localhost:5432/Library"
 )
 # config.set_main_option("sqlalchemy.url", db_uri)
-config.set_main_option("sqlalchemy.url", os.getenv("sqllite_uri"))
+config.set_main_option("sqlalchemy.url", db_uri)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
