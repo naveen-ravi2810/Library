@@ -1,27 +1,24 @@
-from fastapi import APIRouter, Header
+from fastapi import APIRouter, Depends
 from Validators.books_validate import CreateBook
 from CURD import curd_books
 from Models import session
-from typing import Annotated
-from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.exc import IntegrityError
+from authorization.auth_berear import common_auth, admin_auth
 
 router = APIRouter()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 @router.get("/")
-def get_books():
+def get_books(jwt_data=Depends(common_auth)):
     try:
         return {"status": True, "books": curd_books.get_book_items(db=session)}
     except Exception as e:
         return {"status": False, "message": f"Error:{e}"}
 
 
-@router.post("/", name="This is for adding book")
-def add_book(book_details: CreateBook, authorization: Annotated[str | None, Header()]):
+@router.post("/", name="This is for adding book", description="By admins only")
+def add_book(book_details: CreateBook, jwt_data=Depends(admin_auth)):
     try:
-        print(authorization)
         curd_books.create_book_item(book=book_details, db=session)
         return {"status": True}
     except IntegrityError:
@@ -35,6 +32,7 @@ def get_book_by_filter(
     book_name: str | None = None,
     book_author: str | None = None,
     book_genre: str | None = None,
+    jwt_data=Depends(common_auth),
 ):
     try:
         return curd_books.get_books_by_filter(
@@ -48,7 +46,7 @@ def get_book_by_filter(
 
 
 @router.get("/{book_id}")
-def get_book(book_id: int):
+def get_book(book_id: int, jwt_data=Depends(common_auth)):
     try:
         return {
             "status": True,
@@ -59,7 +57,9 @@ def get_book(book_id: int):
 
 
 @router.put("/{book_id}")
-def update_book_by_id(book_id: int, book_details: CreateBook):
+def update_book_by_id(
+    book_id: int, book_details: CreateBook, jwt_data=Depends(admin_auth)
+):
     try:
         return {
             "status": True,
@@ -72,7 +72,7 @@ def update_book_by_id(book_id: int, book_details: CreateBook):
 
 
 @router.delete("/{book_id}")
-def delete_book(book_id: int):
+def delete_book(book_id: int, jwt_data=Depends(admin_auth)):
     try:
         return {
             "status": True,

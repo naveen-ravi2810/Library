@@ -1,22 +1,7 @@
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-import os
-from dotenv import load_dotenv
+from core.settings import settings
 
-load_dotenv()
-
-
-postgres_path = (
-    "postgresql://"
-    + os.getenv("postgre_host")
-    + ":"
-    + os.getenv("postgre_pass")
-    + "@localhost:5432/Library"
-)
-engine = create_engine(postgres_path)
-
+engine = create_engine(settings.database_uri)
 Session = sessionmaker(bind=engine)
 session = Session()
-
-
-# session = scoped_session(sessionmaker(autoflush=False, autocommit=False, bind=engine))

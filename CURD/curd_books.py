@@ -106,4 +106,4 @@ def delete_book_by_id(db: Session, book_id: int):
         db.commit()
         return f"Book with id {book_id} deleted successfully"
     else:
-        return f"Book not found"
+        return "Book not found"

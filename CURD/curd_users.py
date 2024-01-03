@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 import Validators
 from Models.Tables import UsersBase
 import bcrypt
+from authorization import auth_handler
 
 
 def add_user(db: Session, user_details: Validators.CreateUser):
@@ -25,5 +26,29 @@ def login_user(db: Session, user_details: Validators.user_validate.LoginUser):
     if user and bcrypt.checkpw(
         user_details.user_password.encode("utf-8"), user.password.encode("utf-8")
     ):
-        return auth_handler.generate_token(user=user, exp=3600)
+        return auth_handler.signJWT(user=user)
     raise Exception("Invalid User Credentials")
+
+
+def list_users(db: Session):
+    return db.query(UsersBase).all()
+
+
+def get_user_by_id(db: Session, user_id: int):
+    user_details = (
+        db.query(
+            UsersBase.user_name,
+            UsersBase.user_role,
+            UsersBase.user_id,
+            UsersBase.user_nick_name,
+        )
+        .filter(UsersBase.user_id == user_id)
+        .first()
+    )
+    user_details_dict = {
+        "user_name": user_details.user_name,
+        "user_role": user_details.user_role,
+        "user_nick_name": user_details.user_nick_name,
+        "user_id": user_details.user_id,
+    }
+    return user_details_dict

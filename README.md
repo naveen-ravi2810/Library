@@ -41,4 +41,3 @@ The project serves on http://loadhost:8000
 ### To visualize the API's
 
 Go to http://localhost:8000/docs
-

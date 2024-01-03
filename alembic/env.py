@@ -5,9 +5,9 @@ from sqlalchemy import pool
 
 from alembic import context
 
-import os
-from dotenv import load_dotenv
 from Models.Tables import Base
+from core.settings import settings
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -21,17 +21,8 @@ if config.config_file_name is not None:
 # Placing my DB uri from env variable
 
 
-load_dotenv()
-
-db_uri = (
-    "postgresql://"
-    + os.getenv("postgre_host")
-    + ":"
-    + os.getenv("postgre_pass")
-    + "@localhost:5432/Library"
-)
 # config.set_main_option("sqlalchemy.url", db_uri)
-config.set_main_option("sqlalchemy.url", db_uri)
+config.set_main_option("sqlalchemy.url", settings.database_uri)
 
 # add your model's MetaData object here
 # for 'autogenerate' support

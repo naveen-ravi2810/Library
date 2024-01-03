@@ -7,5 +7,5 @@ class CreateUser(BaseModel):
 
 
 class LoginUser(BaseModel):
-    user_name: str
+    user_name: str = Field(min_length=8, max_length=100)
     user_password: str

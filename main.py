@@ -1,15 +1,26 @@
 from fastapi import FastAPI
-from API.Endpoints.v1.Books_v1 import router as book_router
-from API.Endpoints.v1.Notes_v1 import router as note_router
-from API.Endpoints.v1.Users_v1 import router as user_router
+from API.v1.api import api
+from core.settings import settings
 import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+app = FastAPI(
+    title=settings.app_name,
+    version=settings.api_version,
+    description=settings.app_description,
+    contact=settings.api_contact,
+    summary=settings.api_summary,
+)
 
-app.include_router(book_router, prefix="/book", tags=["CURD Books"])
-app.include_router(user_router, prefix="/user", tags=["CURD Users"])
-app.include_router(note_router, prefix="/note", tags=["CURD Notes"])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins="http://localhost:5173/",
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
+app.include_router(api, prefix=settings.api_prefix)
 
 if __name__ == "__main__":
-    uvicorn.run(app=app)
+    uvicorn.run("main:app", reload=True)
