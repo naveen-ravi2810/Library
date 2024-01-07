@@ -3,6 +3,7 @@ import Validators
 from Models.Tables import UsersBase
 import bcrypt
 from authorization import auth_handler
+from sqlalchemy.orm import defer
 
 
 def add_user(db: Session, user_details: Validators.CreateUser):
@@ -31,7 +32,7 @@ def login_user(db: Session, user_details: Validators.user_validate.LoginUser):
 
 
 def list_users(db: Session):
-    return db.query(UsersBase).all()
+    return db.query(UsersBase).options(defer(UsersBase.password)).all()
 
 
 def get_user_by_id(db: Session, user_id: int):

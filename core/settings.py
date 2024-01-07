@@ -49,9 +49,7 @@ You will be able to:
     api_prefix: str = "/api/v1"
     api_version: str = "0.0.1"
     # Database
-    database_uri: str = os.environ.get(
-        "postgre_uri", "postgresql://postgres:tiger@localhost:5432/Library"
-    )
+    database_uri: str = os.environ.get("postgre_uri")
     # JWT_config
     JWT_SECRET_KEY: str = os.environ.get(
         "jwt_secret_key", "e177df33-ceef-4e97-9657-eddaf6c92d17"
